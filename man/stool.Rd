@@ -1,7 +1,7 @@
 \name{stool}
 \alias{stool}
 \docType{data}
-\title{Stool Data Set.}
+\title{Stool Data Set}
 \description{A data set containing all taxa from 24 subjects.}
 \usage{data(stool)}
 \format{

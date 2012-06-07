@@ -2,13 +2,14 @@
 \alias{HMPTrees-internal}
 \alias{checkValidHelp}
 \alias{traverseHelp}
-\alias{helpRelations}
 \alias{rowMatch}
-\alias{getTopXPhylum}
 \alias{getBranchSizes}
 \alias{getRelations}
 \alias{getTaxaDepth}
 \alias{traverseTree}
+\alias{subsetData}
+\alias{helpBuildTree}
+\alias{buildTree}
 
 \title{Internal Functions}
 \description{These files are for internal use only.}
