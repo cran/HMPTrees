@@ -1,7 +1,7 @@
 \name{saliva}
 \alias{saliva}
 \docType{data}
-\title{Saliva Data Set.}
+\title{Saliva Data Set}
 \description{A data set containing all taxa from 24 subjects.}
 \usage{data(saliva)}
 \format{

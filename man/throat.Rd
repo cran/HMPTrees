@@ -1,7 +1,7 @@
 \name{throat}
 \alias{throat}
 \docType{data}
-\title{Throat Data Set.}
+\title{Throat Data Set}
 \description{A data set containing all taxa from 24 subjects.}
 \usage{data(throat)}
 \format{

@@ -1,8 +1,11 @@
 transformHMPtoHMPTree <-
 function(data){
-	data <- t(data)
-	data <- cbind(taxa=rownames(data), data)
-	
-	return(data)
+if(missing(data)){
+stop("A valid data set is required.")
 }
 
+data <- as.data.frame(t(data))
+data <- cbind(taxa=rownames(data), data)
+
+return(data)
+}
