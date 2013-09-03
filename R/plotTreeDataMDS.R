@@ -1,70 +1,74 @@
 plotTreeDataMDS <-
-function(data1=NULL, data2=NULL, data3=NULL, myTitle="Tree MDS Comparisons", calcMLE=TRUE, mleTitle1="Data1 MLE", 
-mleTitle2="Data2 MLE", mleTitle3="Data3 MLE"){
-myPSize <- 1
-myPColors <- NULL
-myPColors2 <- NULL
-mleTitles <- NULL
-dataCount <- 0
+function(data, main="Tree MDS Comparisons", calcMLE=TRUE, mleTitles, 
+dotColors=c("red", "orange", "blue", "green", "yellow", "purple"), dotSizes=c(1, 2), 
+showNames=FALSE, returnCoords=FALSE){
+normalDotSizes <- NULL
+mleDotSizes <- NULL
+normalColors <- NULL
+mleColors <- NULL
+mleLabels <- NULL
 
-if(is.null(data1) && is.null(data2) && is.null(data3)){ #make sure we have at least 1 data set
-stop("At least one valid data set is required.")
+if(missing(data))
+stop("At least 1 valid data set is required.")
+
+if(class(data) == "data.frame" || class(data) == "matrix"){ #turn a single dataset into a list
+tempData <- data
+data <- NULL
+data[[1]] <- tempData
 }
 
-if(!is.null(data1)){
-sub <- 0
-if(is.factor(data1[1,1]))
-sub <- 1
-if(ncol(data1) < (1+sub))
-stop("'Data1' is not valid.")
-myPColors <- c(myPColors, rep('red', (ncol(data1)-sub)))
-myPColors2 <- c(myPColors2, 'orange')
-dataCount <- dataCount + 1
-mleTitles <- c(mleTitles, mleTitle1)
-}
-if(!is.null(data2)){
-sub <- 0
-if(is.factor(data2[1,1]))
-sub <- 1
-if(ncol(data2) < (1+sub))
-stop("'Data2' is not valid.")
-myPColors <- c(myPColors, rep('blue', (ncol(data2)-sub)))
-myPColors2 <- c(myPColors2, 'cyan')
-dataCount <- dataCount + 1
-mleTitles <- c(mleTitles, mleTitle2)
-}
-if(!is.null(data3)){
-sub <- 0
-if(is.factor(data3[1,1]))
-sub <- 1
-if(ncol(data3) < (1+sub))
-stop("'Data3' is not valid.")
-myPColors <- c(myPColors, rep('green', (ncol(data3)-sub)))
-myPColors2 <- c(myPColors2, 'purple')
-dataCount <- dataCount + 1
-mleTitles <- c(mleTitles, mleTitle3)
-}
+if(length(dotColors) < length(data))
+dotColors <- rainbow(length(data))
 
-data <- mergeDataSets(data1, data2, data3, calcMLE)
+twoColors <- length(dotColors) >= length(data)*2 #2 colors per data set
+dataCount <- length(data)
+titles <- !missing(mleTitles)
+if(titles) #make sure we have the same number of titles as data sets
+titles <- length(mleTitles) == length(data)
 
-if(class(data[1,1]) == "factor"){
-tdata <- t(data[,-1])
+for(i in 1:dataCount){
+tempData <- data[[i]]
+if(twoColors){
+colorLoc <- i*2-1
+colorLoc2 <- colorLoc+1
 }else{
-tdata <- t(data)
+colorLoc <- i
+colorLoc2 <- i
 }
-tdata.dist <- dist(tdata)
-loc <- cmdscale(tdata.dist, k=2)
+
+normalColors <- c(normalColors, rep(dotColors[colorLoc], ncol(tempData)))
+mleColors <- c(mleColors, dotColors[colorLoc2])
+normalDotSizes <- c(normalDotSizes, rep(dotSizes[1], ncol(tempData)))
+mleDotSizes <- c(mleDotSizes, dotSizes[2])
+if(calcMLE && titles)
+mleLabels <- c(mleLabels, mleTitles[i])
+}
+
+mData <- mergeDataSets(data, calcMLE)
+tData <- t(mData)
+loc <- cmdscale(dist(tData), k=2)
 x <- loc[,1]
 y <- -loc[,2]
 
-myPColors <- c(myPColors, myPColors2, 'black')
-plot(x, y, pch=19, xlab='MDS 1', ylab='MDS 2', pty='s', col=myPColors, cex=myPSize, main=myTitle)
+colors <- c(normalColors, mleColors, "black")
+sizes <- c(normalDotSizes, mleDotSizes, dotSizes[2])
+plot(x, y, pch=19, xlab="MDS 1", ylab="MDS 2", pty="s", col=colors, cex=sizes, main=main)
 
-if(calcMLE){ #only plot mle titles if we are plotting them
+if(calcMLE && !showNames){ #only plot mle titles if we are calculating them
 if(dataCount > 1){ #dont add a combined mle if we dont make one
+if(titles){
 mleTitles <- c(mleTitles, "Combined MLE")
+}else{
+mleTitles <- paste("Data", 1:length(data), "MLE")
+}
 dataCount <- dataCount + 1
 }
-text(x[(nrow(tdata)-dataCount+1):nrow(tdata)], y[(nrow(tdata)-dataCount+1):nrow(tdata)], mleTitles, pos=3, cex=.75)
+text(x[(nrow(tData)-dataCount+1):nrow(tData)], y[(nrow(tData)-dataCount+1):nrow(tData)], mleTitles, pos=3, cex=.75)
 }
+
+if(showNames) #Plot the names of the samples
+text(x, y, colnames(mData), pos=3, cex=.75)
+
+if(returnCoords)
+return(list(x=x, y=y))
 }

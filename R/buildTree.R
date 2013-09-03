@@ -1,20 +1,30 @@
 buildTree <-
-function(data=NULL){
-if(is.null(data))
+function(data, level="genus", split="."){
+if(missing(data))
 stop("A valid data set is required.")
-if(!is.factor(data[1,1]))
-stop("The first column must contain the levels of the data set.")
 
-taxa <- data[1]
+names <- rownames(data)
+nameSplit <- strsplit(as.character(names), split,  fixed=TRUE)
 
-clvls <- levels(taxa[,1])#names of levels in data set
-clvlspt <- strsplit(as.character(clvls), ".",  fixed = TRUE)#names of levels split by " "
+retData <- data
 
-for(i in 1:nrow(data)){ #search through all rows
-if(length(clvlspt[[i]]) == 1){ #only look at top level nodes
-data <- helpBuildTree(data, clvls, i)
+for(lvl in 1:(getTaxaDepth(level)-1)){
+newData <- data.frame()
+for(i in 1:length(nameSplit)){ 
+name <- paste(nameSplit[[i]][1:lvl], collapse=split)
+if(is.element(name, rownames(newData))){
+loc <- grep(name, rownames(newData), fixed=TRUE)
+newData[loc,] <- newData[loc,] + data[i,]
+}else{
+newData <- rbind(data[i,], newData)
+rownames(newData)[1] <- name
 }
 }
+retData <- rbind(retData, newData)
+}
 
-return(data)
+retData <- ifelse(retData>=1, 1, 0)
+retData <- retData[order(rownames(retData)),]
+
+return(retData)
 }

@@ -1,8 +1,14 @@
 subsetData <-
-function(data=NULL, mySite = "saliva", myRegion = "v3-v5"){
-data <- subset(data, data[1] == mySite)
-data[1] <- NULL
-data <- subset(data, data[1] == myRegion) 
-data[1] <- NULL
+function(data, site, region){
+if(!missing(site)){
+data <- subset(data, data[,1] == site)
+data <- data[,-1, drop=FALSE]
+}
+
+if(!missing(region)){
+data <- subset(data, data[,1] == region) 
+data <- data[,-1, drop=FALSE]
+}
+
 return(data)
 }
