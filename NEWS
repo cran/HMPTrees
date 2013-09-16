@@ -1,0 +1,20 @@
+CHANGES IN HMPTrees VERSION 1.2
+
+CHANGES
+
+* Changed every function to expect the taxa to be listed as the rownames, rather than the first column
+
+* Changed the parallel computing in the compareTwoDataSets functions to work on any OS and use the doParallel package
+
+* Changed the plotTreeDataMDS and mergeDataSets functions to accommodate any number of data sets
+
+* Added more functionality/options to the plotTreeDataMDS function
+
+* Changed the generateTree function 
+
+* Changed several functions to allow the use of splits besides a '.' in the taxa names
+
+
+BUG FIXES
+
+* 

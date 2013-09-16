@@ -2,16 +2,16 @@
 \alias{throat}
 \docType{data}
 \title{Throat Data Set}
-\description{A data set containing all taxa from 24 subjects.}
+\description{A data set containing all taxa from 22 subjects.}
+
 \usage{data(throat)}
+
 \format{
-The format is a data frame of 529 rows by 25 columns, with the each column being a separate subject and each row being a different taxa, 
-with the exception of the first three columns. The first column is the body site column, which in this case has already been filtered to 
-only include 'throat'. The second column is the region column, which in this case has already been filtered to only include "v3-v5" and the 
-third column contains the taxanomical name separated by '.', while every other column contains the number of times that sample was recorded. 
-The Throat data has also not been normalized and should be used with 'formatData'.
+	The format is a data frame of 529 rows by 22 columns, with each column being a separate subject and each 
+	row being a different taxa denoted by the row names.  The taxanomical levels are separated by a '.' in 
+	their names (Bacteria.Phylum.Class....).  The values in each column are the sum of values that each taxa
+	had in an RDP file. It should also be noted that the samples have not been normalized and should be 
+	used with 'formatData'.  Also any level that ends with a U was unclassified in the RDP file.
 }
-\examples{
-data(throat)
-}
+
 \keyword{datasets}

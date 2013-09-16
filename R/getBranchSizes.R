@@ -1,49 +1,47 @@
 getBranchSizes <-
-function(trdata, brColors, divisions){
-if(missing(trdata) || class(trdata) != "phylo"){
+function(tree, colors, divisions){
+if(missing(tree) || class(tree) != "phylo")
 stop("A valid tree is required.")
+
+edgeColor <- NULL
+edgeWidth <- NULL
+edgeLength <- tree$edge.length
+
+if(max(edgeLength) == 0){ #catch an all 0 tree
+retData <- list(edgecol=rep(0, length(edgeLength)), edgewid=rep(0, length(edgeLength)))
+return(retData)
 }
 
-edgecol <- NULL
-edgewid <- NULL
-edgelen <- trdata$edge.length
-
-noZdata <- subset(edgelen, edgelen != 0)#get min and max without 0's in data set
-quan <- quantile(noZdata, probs = seq(0, 1, 0.2))
-
-if(missing(divisions)){ #default divisions
+if(missing(divisions))
 divisions <- c(.1, 1, 10, 100, 1000, 10000)
-}
-sort(divisions)
-divisions <- c(quan[[1]], divisions)#always want the 0 lengths to be white
 
-if(missing(brColors)){ #default colors
-brColors <- c("red", "orange", "yellow", "green" , "cyan", "blue")
-}
+divisions <- sort(divisions)
 
-if(length(divisions) > (length(brColors)+1)){ #need more colors, dont care if more colors than divisons
-brColors <- c(brColors, rep(brColors[length(brColors)], (length(divisions) - length(brColors)-1)))
-}
+if(missing(colors))
+colors <- c("red", "orange", "yellow", "green" , "cyan", "blue")
 
-palette(brColors)
+if(length(divisions) > (length(colors)+1)) #need more colors, dont care if more colors than divisons
+colors <- c(colors, rep(colors[length(colors)], (length(divisions) - length(colors)-1)))
 
-for(i in (1:length(edgelen))){ #loop through all tree edges
-if(edgelen[as.numeric(i)] < divisions[1]){ #0 value so make it white
-edgecol <- append(edgecol, 0)
-edgewid <- append(edgewid, 0)
+palette(colors)
+
+for(i in 1:length(edgeLength)){ 
+if(edgeLength[i] == 0){ #0 value so make it white
+edgeColor <- append(edgeColor, 0)
+edgeWidth <- append(edgeWidth, 0)
 }else{
-for(j in (2:length(divisions))){
-if(edgelen[as.numeric(i)] <= divisions[j]){
-cval <- (j-1)
-len <- floor(4*j/length(divisions)) 
-edgecol <- append(edgecol, cval)
-edgewid <- append(edgewid, len)
+for(j in 1:length(divisions)){
+if(edgeLength[i] <= divisions[j]){
+cval <- j
+len <- floor(4*(j+1)/length(divisions)) 
+edgeColor <- append(edgeColor, cval)
+edgeWidth <- append(edgeWidth, len)
 break
 }
 }
 }
 }
 
-bs <- list(edgecol = edgecol, edgewid = edgewid)
-return(bs)
+retData <- list(edgecol=edgeColor, edgewid=edgeWidth)
+return(retData)
 }

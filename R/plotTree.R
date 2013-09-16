@@ -1,35 +1,36 @@
 plotTree <-
-function(trees, myColors, myDivisions, myTitle, mySubTitle, 
+function(trees, colors, divisions, main, sub, 
 showTipLabel=TRUE, showNodeLabel=FALSE, displayLegend=TRUE){
 
-if(missing(trees)){
-stop("A valid tree of type 'phylo' is required.")
-}
-count <- 1
+if(missing(trees))
+stop("At least one valid tree of type 'phylo' is required inside a list.")
 
-if(displayLegend){
-displayLegend(myColors, myDivisions)
-}
+if(missing(sub))
+sub <- ""
 
-for(tr in trees){
-bs <- getBranchSizes(tr, myColors, myDivisions)
+genMain <- missing(main)
+if(genMain)
+main <- NULL
+passMain <- length(main) == length(trees)
 
-par(cex = .75)
-plot(tr, type = "r", root.edge = FALSE, edge.color = bs$edgecol, edge.width = bs$edgewid, 
-show.tip.label=showTipLabel, show.node.label=showNodeLabel) #plots the tree
+if(displayLegend)
+displayLegend(colors, divisions)
 
-if(missing(myTitle)){
-theTitle <- paste("Sample: ", count, sep="")
-count <- count + 1
+par(cex=.75)
+
+for(i in 1:length(trees)){
+tr <- trees[[i]]
+bs <- getBranchSizes(tr, colors, divisions)
+
+if(passMain){
+main2 <- main[i]
+}else if(genMain){
+main2 <- names(trees)[i]
 }else{
-theTitle <- myTitle
-}
-if(missing(mySubTitle)){
-theSubTitle <- ""
-}else{
-theSubTitle <- mySubTitle
+main2 <- main[1]
 }
 
-title(theTitle, sub = theSubTitle)
+plot(tr, type="r", root.edge=FALSE, edge.color=bs$edgecol, edge.width=bs$edgewid, 
+show.tip.label=showTipLabel, show.node.label=showNodeLabel, main=main2, sub=sub)
 }
 }

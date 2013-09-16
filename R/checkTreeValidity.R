@@ -1,37 +1,29 @@
 checkTreeValidity <-
-function(data = NULL, sample = 2, checkAll=FALSE, epsilon = 0.0001){
-overAllValid <- NULL
-if(is.null(data) || ncol(as.data.frame(data)) < 2){
+function(data, samples=1, epsilon=0.0001, split="."){
+if(missing(data))
 stop("A valid data set is required.")
-}
-if(!is.factor(data[1,1]))
-stop("The first column must contain the levels of the data set.")
-if(checkAll){
-sample <- c(2:ncol(data))
-}
 
-for(samp in sample){
-if(as.numeric(samp) > ncol(data)){ #make sure we got a good number
-stop(paste(samp," is larger than the bounds of the data set",sep=""))
-}
-if(as.numeric(samp) <= 1){ #make sure we got a good number
-stop(paste(samp," is smaller than the bounds of the data set",sep=""))
-}
-oneDay <- data[as.numeric(samp)] #a sample from 1 day
-tempdata <- cbind(data[1], oneDay)
+overAllValid <- NULL
+if(samples[1] == 0)
+samples <- 1:ncol(data)
 
-clvls <- levels(tempdata[,1])#names of levels in data set
-clvlspt <- strsplit(as.character(clvls), ".", fixed = TRUE)#names of levels split by " "
+for(sample in samples){
+if(is.na(as.numeric(sample)))
+stop(sprintf("%s must be a number", as.character(sample)))
+if(sample > ncol(data))
+stop(sprintf("%s is larger than the bounds of the data set", as.character(sample)))
+if(sample < 1)
+stop(sprintf("%s is smaller than the bounds of the data set", as.character(sample)))
 
-for(i in (1:nrow(tempdata))){ #search through all rows
-if(length(clvlspt[[i]]) == 1){ #only look at top level nodes - should only be 1
-valid <- checkValidHelp(tempdata, i, epsilon)
-if(!valid){
-print(paste("Tree", samp, "is invalid.",sep=" "))
-}
-}
+tempData <- data[, sample, drop=FALSE]
+nameSplit <- strsplit(rownames(tempData), split, fixed=TRUE)
+
+for(i in 1:nrow(tempData)){ 
+if(length(nameSplit[[i]]) == 1)
+valid <- checkTreeValidHelp(tempData, i, epsilon, split)
 }
 overAllValid <- c(overAllValid, valid)
 }
+
 return(overAllValid)
 }
