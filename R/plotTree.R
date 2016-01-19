@@ -30,7 +30,7 @@ main2 <- names(trees)[i]
 main2 <- main[1]
 }
 
-plot(tr, type="r", root.edge=FALSE, edge.color=bs$edgecol, edge.width=bs$edgewid, 
+ape::plot.phylo(tr, type="r", root.edge=FALSE, edge.color=bs$edgecol, edge.width=bs$edgewid, 
 show.tip.label=showTipLabel, show.node.label=showNodeLabel, main=main2, sub=sub)
 }
 }

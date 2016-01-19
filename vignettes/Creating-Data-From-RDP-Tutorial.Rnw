@@ -1,4 +1,4 @@
-%\VignetteIndexEntry{Categorical FDA Tutorial}
+%\VignetteIndexEntry{Creating Data From RDP Tutorial}
 \documentclass[a4paper]{article}
 
 \title{Guide to Turning an RDP File into a Data Set}

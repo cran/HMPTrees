@@ -7,11 +7,11 @@ if(any(grepl(")", rownames(data), fixed=TRUE)) || any(grepl("(", rownames(data),
 stop("Using parentheses and/or colons in the taxa names is not allowed.")
 
 myStr <- ""
-nameSplit <- strsplit(rownames(data), split, fixed=TRUE)
+splitLength <- unlist(lapply(strsplit(rownames(data), split, fixed=TRUE), length))
+startPlace <- which(splitLength == 1)
 maxTaxaDepth <- getTaxaDepth(level)
 
-for(i in 1:nrow(data)){ 
-if(length(nameSplit[[i]]) == 1){ 
+for(i in startPlace){ 
 tempStr <- traverseTreeHelp(data[, 1, drop=FALSE], i, 1, maxTaxaDepth, split)
 if(tempStr == "") 
 next 
@@ -21,12 +21,11 @@ myStr <- paste(myStr, ",", tempStr, sep="")
 myStr <- tempStr
 }
 }
-}
 
 myTree <- paste("", myStr, ";", sep="")
 
-retTree <- read.tree(text=myTree) #turns the newick format into a tree
-retTree <- collapse.singles(retTree)
+retTree <- ape::read.tree(text=myTree) #turns the newick format into a tree
+retTree <- ape::collapse.singles(retTree)
 
 return(retTree)
 }

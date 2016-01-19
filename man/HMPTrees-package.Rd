@@ -2,12 +2,11 @@
 \alias{HMPTrees-package}
 \alias{HMPTrees}
 \docType{package}
-\title{Statistical Object Oriented Data Analysis of RDP-based Taxonomic trees from Human Microbiome Data: Modeling, Visualization, and Two-Group Comparison}
+\title{Object Oriented Data Analysis of Taxonomic Trees}
 
 \description{
-	In this package, we provide tools to model, compare, and visualize populations of taxonomic tree objects. In particular, 
-	using a unimodal probability measure in the set of trees, we provide procedures to compute the MLE of the central tree and the 
-	LRT statistics for comparing the distributions of two metagenomic populations.
+	Object Oriented Data Analysis (OODA) methods to analyze Human Microbiome taxonomic trees directly. 
+	We provide tools to model, compare, and visualize populations of taxonomic trees.
 }
 
 \details{

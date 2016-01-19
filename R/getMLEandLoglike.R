@@ -20,7 +20,7 @@ gStar <- apply(data, 1, mean)
 gStar <- apply(data, 1, function(x){p=(x%*%weight)/sum(weight)})
 }
 
-while(rowMatch(t(data),t(gStar))[1] != 0) #make sure the mean isnt a point in our data set
+while(rowMatch(t(data), t(gStar))[1] != 0) #make sure the mean isnt a point in our data set
 gStar <- gStar + 0.01
 
 ret <- data.frame(matrix(0, nrow=maxSteps, ncol=2))

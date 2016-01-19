@@ -1,6 +1,5 @@
 generateTree <-
 function(data, nreads=10000, nsamps=50, theta=0, level="genus", split="."){
-require(HMP)
 if(missing(data))
 stop("A valid data set is required.")
 if(nreads <= 0)
@@ -12,14 +11,14 @@ tempdata <- trimToTaxaLevel(data, level, FALSE, split=split)
 tempdata <- transformHMPTreetoHMP(tempdata, TRUE)
 
 if(theta > 0 && theta < 1){
-dirfit <- dirmult(tempdata) 
+dirfit <- dirmult::dirmult(tempdata) 
 dirgamma <- dirfit$pi * ((1 - theta)/theta)
 }else{
-dirfit <- DM.MoM(tempdata)
+dirfit <- HMP::DM.MoM(tempdata)
 dirgamma <- dirfit$gamma
 }
 
-gendata <- Dirichlet.multinomial(rep(nreads, nsamps), dirgamma)
+gendata <- HMP::Dirichlet.multinomial(rep(nreads, nsamps), dirgamma)
 colnames(gendata) <- colnames(tempdata)
 gendata <- transformHMPtoHMPTree(gendata)
 
